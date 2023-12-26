@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2c3e50;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            transition: background-color 0.5s;
+        }
+
+        #calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            width: 400px;
+            gap: 5px;
+            background-color: #34495e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #display {
+            grid-column: span 4;
+            height: 50px;
+            background: linear-gradient(to bottom, #2c3e50, #1c2730);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 10px;
+            font-size: 24px;
+            overflow: hidden;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        button {
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            border: 2px solid #2980b9;
+            outline: none;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            background: rgba(0, 0, 0, 0.2);
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .opButton,
+        .additionalButton {
+            background: linear-gradient(to bottom, #ffaa00, #ff8000);
+            color: white;
+            box-shadow: 0 6px 10px rgba(255, 170, 0, 0.5), 0 0 15px rgba(255, 170, 0, 0.1);
+        }
+
+        .additionalButton {
+            background: linear-gradient(to bottom, #60c060, #45a049);
+            box-shadow: 0 6px 10px rgba(96, 192, 96, 0.5), 0 0 15px rgba(96, 192, 96, 0.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .clearButton:active,
+        .themeSwitch:active {
+            transform: scale(0.95);
+        }
+
+        .clearButton:hover,
+        .themeSwitch:hover {
+            background: linear-gradient(to right, #ff9500, #ff6a00);
+        }
+
+        .clearButton {
+            grid-column: span 2;
+        }
+
+        .themeSwitch {
+            grid-column: span 4;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .slider {
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 2px;
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .slider {
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            position: absolute;
+        }
+
+        #keyboardInfo {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        #keyboardInfo p {
+            margin-bottom: 8px;
+        }
+
+        #keyboardInfo ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #keyboardInfo li {
+            margin-bottom: 6px;
+        }
+
+        #keyboardInfo li strong {
+            color: #3498db;
+        }
+
+        #keyboardInfo li ul {
+            list-style-type: disc;
+            margin-left: 16px;
+        }
+
+        #keyboardInfo li ul li {
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .switch:hover {
+            background: linear-gradient(to right, #45a049, #4CAF50);
+        }
+
+        .slider.mode-2 {
+            transform: translateX(50px);
+        }
+
+        .slider.mode-3 {
+            transform: translateX(100px);
+        }
+
+        body.mode-2 {
+            background: linear-gradient(to right, #FF5E3A, #FF9500);
+            color: white;
+        }
+
+        body.mode-3 {
+            background: linear-gradient(to right, #40E0D0, #0080FF);
+            color: white;
+        }
+
+        #calculator.mode-2 {
+            background: linear-gradient(to right, #B33771, #5A29A3);
+        }
+
+        #calculator.mode-3 {
+            background: linear-gradient(to right, #FDC830, #F37335);
+        }
+
+        #display.mode-2 {
+            background-color: #8E44AD;
+        }
+
+        #display.mode-3 {
+            background-color: #3498DB;
+        }
+
+        .additionalButton {
+            background-color: #45a049;
+        }
+        
+    </style>
+</head>
+
+
+<body class="mode-1">
+    <div id="calculator" class="mode-1">
+        <div id="display" class="mode-1">0</div>
+        <button class="additionalButton" id="percentButton">%</button>
+        <button class="additionalButton" id="ceButton">CE</button>
+        <button class="clearButton" id="cButton">C</button>
+        <button class="additionalButton" id="backspaceButton">⌫</button>
+        <button class="additionalButton" id="invertButton" onclick="invert()">1/x</button>
+        <button class="additionalButton" id="squareButton">x²</button>
+        <button class="additionalButton" id="sqrtButton">√x</button>
+        <button class="opButton">÷</button>
+        <button class="numButton">7</button>
+        <button class="numButton">8</button>
+        <button class="numButton">9</button>
+        <button class="opButton">*</button>
+        <button class="numButton">4</button>
+        <button class="numButton">5</button>
+        <button class="numButton">6</button>
+        <button class="opButton">-</button>
+        <button class="numButton">1</button>
+        <button class="numButton">2</button>
+        <button class="numButton">3</button>
+        <button class="opButton">+</button>
+        <button class="additionalButton" id="plusMinusButton">±</button>
+        <button class="numButton">0</button>
+        <button class="numButton" id="commaButton">.</button>
+        <button class="eqButton specialButton" id="eqButton">=</button>
+    </div>
+
+    <div class="themeSwitch" onclick="toggleTheme()">
+        <div class="slider"></div>
+    </div>
+
+    <div id="keyboardInfo">
+        <p>can use your keyboard for input:</p>
+        <ul>
+            <li><strong>Numbers (0-9):</strong> Type to input numbers</li>
+            <li><strong>Operators (+, -, *, /):</strong> Type to perform basic arithmetic operations</li>
+            <li><strong>Special keys:</strong></li>
+            <ul>
+                <li><strong>Enter:</strong> Calculate the result</li>
+                <li><strong>Backspace:</strong> Delete the last digit</li>
+                <li><strong>Escape:</strong> Clear the calculator</li>
+                <li><strong>%:</strong> Apply percentage to the current value</li>
+                <li><strong>c:</strong> Clear the current entry</li>
+                <li><strong>i:</strong> Invert the current value (1/x)</li>
+                <li><strong>s:</strong> Square the current value (x²)</li>
+                <li><strong>r:</strong> Take the square root of the current value (√x)</li>
+                <li><strong>m:</strong> Toggle the sign of the current value (±)</li>
+            </ul>
+        </ul>
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setThemeMode(currentTheme);
+            setEqualButtonStyle();
+        });
+
+        function setEqualButtonStyle() {
+            const equalButton = document.querySelector("#eqButton");
+            equalButton.style.backgroundColor = "#e74c3c";
+            equalButton.style.color = "white";
+
+            equalButton.addEventListener('mousedown', () => {
+                equalButton.style.backgroundColor = "#c0392b";
+            });
+
+            equalButton.addEventListener('mouseup', () => {
+                equalButton.style.backgroundColor = "#e74c3c";
+            });
+
+            equalButton.addEventListener('mouseenter', () => {
+                equalButton.style.backgroundColor = "#d35400";
+            });
+
+            equalButton.addEventListener('mouseleave', () => {
+                equalButton.style.backgroundColor = "#e74c3c";
+            });
+        }
+
+        let firstOperand = "";
+        let secondOperand = "";
+        let currentOperator = null;
+        let resetScreen = false;
+        let currentTheme = 1;
+
+        const display = document.querySelector("#display");
+        const numButtons = document.querySelectorAll(".numButton");
+        const opButtons = document.querySelectorAll(".opButton, .additionalButton");
+        const eqButton = document.querySelector(".eqButton");
+        const clearButton = document.querySelector("#cButton");
+        const percentButton = document.querySelector("#percentButton");
+        const ceButton = document.querySelector("#ceButton");
+        const backspaceButton = document.querySelector("#backspaceButton");
+        const invertButton = document.querySelector("#invertButton");
+        const squareButton = document.querySelector("#squareButton");
+        const sqrtButton = document.querySelector("#sqrtButton");
+        const plusMinusButton = document.querySelector("#plusMinusButton");
+        const commaButton = document.querySelector("#commaButton");
+
+        numButtons.forEach(button => {
+            button.addEventListener('click', () => appendNumber(button.textContent));
+        });
+
+        function appendNumber(value) {
+            if (resetScreen) {
+                display.textContent = "0";
+                resetScreen = false;
+            }
+
+            value = value.replace(',', '.');
+
+            if (value === '.' && display.textContent.includes('.')) {
+                return;
+            }
+
+            if (display.textContent === "0" && value !== '.') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+        }
+
+        opButtons.forEach(button => {
+            button.addEventListener('click', () => setOperation(button.textContent));
+        });
+
+        eqButton.addEventListener('click', () => compute());
+        clearButton.addEventListener('click', () => clearAll());
+        percentButton.addEventListener('click', () => applyPercent());
+        ceButton.addEventListener('click', () => clearEntry());
+        backspaceButton.addEventListener('click', () => deleteLastChar());
+        squareButton.addEventListener('click', () => square());
+        sqrtButton.addEventListener('click', () => squareRoot());
+        plusMinusButton.addEventListener('click', () => toggleSign());
+        commaButton.addEventListener('click', () => {
+
+            if (resetScreen) {
+                display.textContent = "0";
+                resetScreen = false;
+            }
+
+            if (!display.textContent.includes(".")) {
+                display.textContent += ".";
+            }
+        });
+
+        function setOperation(op) {
+            if (currentOperator !== null) compute();
+            
+            // Check if the pressed button is the division button (÷)
+            if (op === '÷') {
+                currentOperator = '/';
+            } else {
+                currentOperator = op;
+            }
+
+            firstOperand = display.textContent;
+            resetScreen = true;
+        }
+
+
+        function compute() {
+            secondOperand = display.textContent.replace(',', '.');
+            
+            if (currentOperator && secondOperand !== "") {
+                try {
+                    const result = operate(currentOperator, firstOperand, secondOperand);
+                    display.textContent = result.toString();
+                } catch (error) {
+                    display.textContent = `Error: ${error.message}`;
+                }
+                currentOperator = null;
+            } else {
+                display.textContent = "Error: Invalid operation";
+            }
+        }
+
+        function clearAll() {
+            display.textContent = "0";
+            firstOperand = "";
+            secondOperand = "";
+            currentOperator = null;
+        }
+
+        function applyPercent() {
+            let currentValue = parseFloat(display.textContent);
+
+            if (!isNaN(currentValue)) {
+                try {
+                    if (firstOperand !== "") {
+                        const firstValue = parseFloat(firstOperand);
+                        display.textContent = calculatePercentage(currentValue, firstValue, currentOperator);
+                    } else {
+                        display.textContent = (currentValue / 100).toString();
+                    }
+                    resetScreen = true;
+                    currentOperator = null;
+                } catch (error) {
+                    display.textContent = `Error: ${error.message}`;
+                }
+            } else {
+                display.textContent = "Error: Invalid input";
+            }
+        }
+
+        function clearEntry() {
+            display.textContent = "0";
+        }
+
+        function deleteLastChar() {
+            display.textContent = display.textContent.slice(0, -1);
+        }
+
+        function invert() {
+            let currentValue = parseFloat(display.textContent);
+
+            if (!isNaN(currentValue) && currentValue !== 0) {
+                display.textContent = (1 / currentValue).toString();
+            } else {
+                display.textContent = 'Error: Cannot invert zero or invalid input';
+            }
+
+            resetScreen = true;
+            currentOperator = null;
+        }
+
+
+        function square() {
+            let currentValue = parseFloat(display.textContent);
+            display.textContent = (currentValue ** 2).toString();
+        }
+
+        function squareRoot() {
+            let currentValue = parseFloat(display.textContent);
+            display.textContent = Math.sqrt(currentValue).toString();
+        }
+
+        function toggleSign() {
+            let currentValue = parseFloat(display.textContent);
+            display.textContent = (-currentValue).toString();
+        }
+
+        function operate(operator, a, b) {
+            a = parseFloat(a);
+            b = parseFloat(b);
+
+            if (isNaN(a) || isNaN(b)) {
+                throw new Error('Invalid input');
+            }
+
+            switch (operator) {
+                case '+':
+                    return a + b;
+                case '-':
+                    return a - b;
+                case '*':
+                    return a * b;
+                case '/':
+                    if (b === 0) {
+                        throw new Error('Division by zero');
+                    }
+                    return a / b;
+                default:
+                    return b;
+            }
+        }
+        
+        function calculatePercentage(currentValue, firstValue, operator) {
+            switch (operator) {
+                case "+":
+                    return (firstValue + (firstValue * (currentValue / 100))).toString();
+                case "-":
+                    return (firstValue - (firstValue * (currentValue / 100))).toString();
+                case "*":
+                    return (firstValue * (currentValue / 100)).toString();
+                case "/":
+                    if (currentValue === 0) {
+                        throw new Error('Division by zero');
+                    }
+                    return (firstValue / (currentValue / 100)).toString();
+                default:
+                    throw new Error('Invalid operator');
+            }
+        }
+
+
+        function toggleTheme() {
+            currentTheme = currentTheme % 3 + 1;
+            setThemeMode(currentTheme);
+            updateKeyboardInfoColor(currentTheme);
+        }
+
+        function setThemeMode(mode) {
+            currentTheme = mode;
+            document.body.className = `mode-${mode}`;
+            document.getElementById("calculator").className = `mode-${mode}`;
+            document.getElementById("display").className = `mode-${mode}`;
+            document.querySelectorAll("button").forEach(button => {
+                button.className = `mode-${mode}`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            function handleKeyPress(event) {
+                const key = event.key;
+                
+                if (!isNaN(key) || key === '.') {
+                    // Numbers and decimal point
+                    appendNumber(key);
+                } else if ('+-*/'.includes(key)) {
+                    // Mathematical operators
+                    setOperation(key);
+                } else {
+                    switch (key) {
+                        case 'Enter':
+                            compute();
+                            break;
+                        case 'Backspace':
+                            deleteLastChar();
+                            break;
+                        case 'Escape':
+                            clearAll();
+                            break;
+                        case '%':
+                            applyPercent();
+                            break;
+                        case 'c':
+                            clearEntry();
+                            break;
+                        case 'i':
+                            invert();
+                            break;
+                        case 's':
+                            square();
+                            break;
+                        case 'r':
+                            squareRoot();
+                            break;
+                        case 'm':
+                            toggleSign();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            document.addEventListener('keydown', handleKeyPress);
+        });
+
+        function updateKeyboardInfoColor(mode) {
+            const keyboardInfo = document.getElementById("keyboardInfo");
+
+            switch (mode) {
+                case 1:
+                    keyboardInfo.style.color = "black";
+                    break;
+                case 2:
+                    keyboardInfo.style.color = "black"; 
+                    break;
+                case 3:
+                    keyboardInfo.style.color = "black"; 
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+</body>
+
+</html>
